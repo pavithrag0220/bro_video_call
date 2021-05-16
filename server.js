@@ -6,7 +6,7 @@ const cors = require("cors");
 
 const io = require("socket.io")(server, {
 	cors: {
-		origin: "https://bro-video-call.herokuapp.com/",
+		origin: "*",
 		methods: [ "GET", "POST" ]
 	}
 })

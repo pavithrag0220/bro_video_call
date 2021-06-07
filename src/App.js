@@ -1,160 +1,65 @@
-import Button from "@material-ui/core/Button"
-import IconButton from "@material-ui/core/IconButton"
-import TextField from "@material-ui/core/TextField"
-import AssignmentIcon from "@material-ui/icons/Assignment"
-import PhoneIcon from "@material-ui/icons/Phone"
-import React, { useEffect, useRef, useState } from "react"
-import { CopyToClipboard } from "react-copy-to-clipboard"
-import Peer from "simple-peer"
-import io from "socket.io-client"
+import React, { useState } from 'react'
+
+import Layout from "./task/views/sidenavbar/sidebar";
+import Home from "./task/views/home/home";
+import Registor from "./task/login/registor";
+import Profile from "./task/views/home/profile";
+import LoginPage from "./task/login/loginpage";
+import UserManagement from "./task/views/adminSetting/userManagement";
+import {
+    BrowserRouter as Router,
+    Route,
+    Switch,
+    Redirect,
+    Link,
+} from "react-router-dom";
+export default function App() {
+    const [isAuthenticated, setisAuthenticated] = useState(false);
+
+ const   loginAuthenticate = () => {
+        setisAuthenticated(true)
+    }
+  const  logout = async () => {
+       setisAuthenticated(false)
+    }
+  const   loginCompoundSupport = () => {
+        setisAuthenticated(false)
+    }
+    return (
+        <div>
 
 
+            {isAuthenticated ? 
+            <div>
+                <Router>
+                    <Layout logout={logout}>
+                        <Redirect to="/home"/> 
+                            <Switch>
+                                <Route exact path="/home">
+                                    <Profile />
+                                </Route>
+                                <Route path="/profile">
+                                    <Home />
+                                </Route>
+                                <Route path="/user-management">
+                                    <UserManagement />
+                                </Route>
+                            </Switch>
+                    </Layout>
+            </Router>
+            </div> :
+             <Router>
+                <Redirect to="/signin" />
+                    <Switch>
+                            <Route path="/signin">
+                                <LoginPage loginProcess={loginAuthenticate} logout={logout} authControl={loginCompoundSupport} />
+                            </Route>
+                            <Route path="/registor">
+                                    <Registor />
+                                </Route>
+                    </Switch>
+            </Router>}
 
-const socket = io.connect('https://bro-video-call.herokuapp.com/')
-function App() {
-	const [me, setMe] = useState("")
-	const [stream, setStream] = useState()
-	const [receivingCall, setReceivingCall] = useState(false)
-	const [caller, setCaller] = useState("")
-	const [callerSignal, setCallerSignal] = useState()
-	const [callAccepted, setCallAccepted] = useState(false)
-	const [idToCall, setIdToCall] = useState("")
-	const [callEnded, setCallEnded] = useState(false)
-	const [name, setName] = useState("")
-	const myVideo = useRef()
-	const userVideo = useRef()
-	const connectionRef = useRef()
-
-	useEffect(() => {
-		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
-			setStream(stream)
-			myVideo.current.srcObject = stream
-		})
-
-		socket.on("me", (id) => {
-			setMe(id)
-		})
-
-		socket.on("callUser", (data) => {
-			setReceivingCall(true)
-			setCaller(data.from)
-			setName(data.name)
-			setCallerSignal(data.signal)
-		})
-	}, [])
-
-	const callUser = (id) => {
-		const peer = new Peer({
-			initiator: true,
-			trickle: false,
-			stream: stream
-		})
-		peer.on("signal", (data) => {
-			socket.emit("callUser", {
-				userToCall: id,
-				signalData: data,
-				from: me,
-				name: name
-			})
-		})
-		peer.on("stream", (stream) => {
-
-			userVideo.current.srcObject = stream
-
-		})
-		socket.on("callAccepted", (signal) => {
-			setCallAccepted(true)
-			peer.signal(signal)
-		})
-
-		connectionRef.current = peer
-	}
-
-	const answerCall = () => {
-		setCallAccepted(true)
-		const peer = new Peer({
-			initiator: false,
-			trickle: false,
-			stream: stream
-		})
-		peer.on("signal", (data) => {
-			socket.emit("answerCall", { signal: data, to: caller })
-		})
-		peer.on("stream", (stream) => {
-			userVideo.current.srcObject = stream
-		})
-
-		peer.signal(callerSignal)
-		connectionRef.current = peer
-	}
-
-	const leaveCall = () => {
-		setCallEnded(true)
-		connectionRef.current.destroy()
-	}
-
-	return (
-		<div>
-			<h1 style={{ textAlign: "center", color: '#fff' }}>Video Call App</h1>
-			<div className="container">
-				<div className="video-container">
-					<div className="video">
-						{stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "400px" }} />}
-					</div>
-					<div className="video">
-						{callAccepted && !callEnded ?
-							<video playsInline ref={userVideo} autoPlay style={{ width: "400px" }} /> :
-							null}
-					</div>
-				</div>
-				<div className="myId">
-					<TextField
-						className="filled-basic"
-						label="Name"
-						variant="filled"
-						value={name}
-						onChange={(e) => setName(e.target.value)}
-						style={{ marginBottom: "20px" }}
-					/>
-					<CopyToClipboard text={me} style={{ marginBottom: "2rem" }}>
-						<Button variant="contained" color="primary" startIcon={<AssignmentIcon fontSize="large" />}>
-							Copy Meeting ID
-					</Button>
-					</CopyToClipboard>
-
-					<TextField
-						id="filled-basic"
-						label="ID to call"
-						variant="filled"
-						value={idToCall}
-						onChange={(e) => setIdToCall(e.target.value)}
-					/>
-					<div className="call-button">
-						{callAccepted && !callEnded ? (
-							<Button variant="contained" color="secondary" onClick={leaveCall}>
-								End Call
-							</Button>
-						) : (
-							<IconButton color="primary" aria-label="call" onClick={() => callUser(idToCall)}>
-								<PhoneIcon fontSize="large" />
-							</IconButton>
-						)}
-						{idToCall}
-					</div>
-				</div>
-				<div>
-					{receivingCall && !callAccepted ? (
-						<div className="caller">
-							<h1 >{name} is calling...</h1>
-							<Button variant="contained" color="primary" onClick={answerCall}>
-								Answer
-						</Button>
-						</div>
-					) : null}
-				</div>
-			</div>
-		</div>
-	)
+        </div>
+    )
 }
-
-export default App;

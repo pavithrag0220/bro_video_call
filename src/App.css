@@ -49,3 +49,11 @@ body {
 		#4776e6
 	); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 }
+
+.screen {
+	background-color: rgb(226, 226, 226) !important;
+	width: 40%;
+	margin: 1rem 0 1rem  !important;
+	color: black;
+	font-weight: 600;
+}

@@ -1,3 +1,4 @@
+import { ButtonBase } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import TextField from "@material-ui/core/TextField"
@@ -5,6 +6,10 @@ import AssignmentIcon from "@material-ui/icons/Assignment"
 import PhoneIcon from "@material-ui/icons/Phone"
 import React, { useEffect, useRef, useState } from "react"
 import { CopyToClipboard } from "react-copy-to-clipboard"
+import MicIcon from '@material-ui/icons/Mic';
+import MicOffIcon from '@material-ui/icons/MicOff';
+import VideocamIcon from '@material-ui/icons/Videocam';
+import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 import Peer from "simple-peer"
 import io from "socket.io-client"
 import "./App.css"
@@ -20,7 +25,10 @@ function App() {
 	const [callAccepted, setCallAccepted] = useState(false)
 	const [idToCall, setIdToCall] = useState("")
 	const [callEnded, setCallEnded] = useState(false)
-	const [name, setName] = useState("")
+	const [name, setName] = useState("");
+	// const [mute, setMute] = useState(true);
+  	const [muteBool, setMuteBool] = useState(false);
+	const [videoBool,setvideoBool] = useState(false);
 	const myVideo = useRef()
 	const userVideo = useRef()
 	const connectionRef = useRef()
@@ -69,6 +77,55 @@ function App() {
 
 		connectionRef.current = peer
 	}
+	const muteCall = ()=>{
+		setMuteBool(true)
+		let newStream = stream.getTracks();
+		newStream.forEach(track => {
+			if(track.kind === 'audio') {
+				track.enabled = false;
+			}
+		})
+		console.log('mutted')
+		playVideo(newStream)
+	  }
+	const playVideo=(stream)=>{
+	myVideo.current.srcObject =  new MediaStream(stream);
+	}
+	  const unMute = ()=>{
+		setMuteBool(false)
+		let newStream = stream.getTracks();
+		newStream.forEach(track => {
+			if(track.kind === 'audio') {
+				track.enabled = true;
+			}
+		})
+		console.log('unmute')
+		playVideo(newStream)
+	  }
+
+	  const showVideo = ()=>{
+		 setvideoBool(false)
+		let newStream = stream.getTracks();
+		newStream.forEach(track => {
+			if(track.kind === 'video') {
+				track.enabled = true;
+			}
+		})
+		console.log('video ON')
+		playVideo(newStream)
+	  }
+	  const hideVideo = ()=>{
+		 setvideoBool(true)
+		 let newStream = stream.getTracks();
+		 newStream.forEach(track => {
+			 if(track.kind === 'video') {
+				 track.enabled = false;
+			 }
+		 })
+		 console.log('video OFF')
+		 playVideo(newStream)
+	  }
+
 
 	const answerCall = () => {
 		setCallAccepted(true)
@@ -100,6 +157,8 @@ function App() {
 				<div className="video-container">
 					<div className="video">
 						{stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "400px" }} />}
+						{muteBool ? <Button onClick={unMute}><MicOffIcon/></Button> :  <Button onClick={muteCall}><MicIcon/></Button>}
+						{videoBool ? <Button onClick={showVideo}><VideocamOffIcon/></Button> :  <Button onClick={hideVideo}><VideocamIcon/></Button>}
 					</div>
 					<div className="video">
 						{callAccepted && !callEnded ?

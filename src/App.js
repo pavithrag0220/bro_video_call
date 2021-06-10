@@ -1,4 +1,3 @@
-import { ButtonBase } from "@material-ui/core"
 import Button from "@material-ui/core/Button"
 import IconButton from "@material-ui/core/IconButton"
 import TextField from "@material-ui/core/TextField"
@@ -13,6 +12,8 @@ import VideocamOffIcon from '@material-ui/icons/VideocamOff';
 import Peer from "simple-peer"
 import io from "socket.io-client"
 import "./App.css"
+import {ReactComponent as Mrbrologo} from './mrbro.svg';
+import Video from 'twilio-video';
 
 
 const socket = io.connect('https://bro-video-call.herokuapp.com/')
@@ -25,15 +26,19 @@ function App() {
 	const [callAccepted, setCallAccepted] = useState(false)
 	const [idToCall, setIdToCall] = useState("")
 	const [callEnded, setCallEnded] = useState(false)
-	const [name, setName] = useState("");
-	// const [mute, setMute] = useState(true);
-  	const [muteBool, setMuteBool] = useState(false);
+	const [name, setName] = useState("")
+	const [muteBool, setMuteBool] = useState(false);
 	const [videoBool,setvideoBool] = useState(false);
 	const myVideo = useRef()
 	const userVideo = useRef()
 	const connectionRef = useRef()
 
 	useEffect(() => {
+
+		if (!Video.isSupported) {
+			alert("Video is not supported!!")
+		}
+		console.log(navigator.mediaDevices)
 		navigator.mediaDevices.getUserMedia({ video: true, audio: true }).then((stream) => {
 			setStream(stream)
 			myVideo.current.srcObject = stream
@@ -77,6 +82,9 @@ function App() {
 
 		connectionRef.current = peer
 	}
+
+	//mute toggle function
+
 	const muteCall = ()=>{
 		setMuteBool(true)
 		let newStream = stream.getTracks();
@@ -103,6 +111,7 @@ function App() {
 		playVideo(newStream)
 	  }
 
+	  //vioeo toggle function
 	  const showVideo = ()=>{
 		 setvideoBool(false)
 		let newStream = stream.getTracks();
@@ -125,7 +134,6 @@ function App() {
 		 console.log('video OFF')
 		 playVideo(newStream)
 	  }
-
 
 	const answerCall = () => {
 		setCallAccepted(true)
@@ -150,19 +158,29 @@ function App() {
 		connectionRef.current.destroy()
 	}
 
+	const imageStyle = {
+		display: "block",
+		marginLeft: "auto",
+		marginRight: "auto",
+		width: "50%"
+	};
+
 	return (
 		<div>
-			<h1 style={{ textAlign: "center", color: '#fff' }}>Video Call App</h1>
-			<div className="container">
+			<Mrbrologo  style={imageStyle} > </Mrbrologo> 
+			<h1 style={{ textAlign: "center", color: '#fff' }}>GoodDayClass 1:1 Practice for Mr.Bro</h1>
+			<div className="container fluid">
 				<div className="video-container">
-					<div className="video">
-						{stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "400px" }} />}
+					<div className="video video-bg">
+						{stream && <video playsInline muted ref={myVideo} autoPlay style={{ width: "455px", borderRadius:"15px"}} />}
+
 						{muteBool ? <Button onClick={unMute}><MicOffIcon/></Button> :  <Button onClick={muteCall}><MicIcon/></Button>}
 						{videoBool ? <Button onClick={showVideo}><VideocamOffIcon/></Button> :  <Button onClick={hideVideo}><VideocamIcon/></Button>}
+
 					</div>
-					<div className="video">
+					<div className="video " style={{borderRadius:"20px !important"}} >
 						{callAccepted && !callEnded ?
-							<video playsInline ref={userVideo} autoPlay style={{ width: "400px" }} /> :
+							<video playsInline ref={userVideo} autoPlay style={{ width: "455px", border:"thick double white", borderRadius:"20px", marginLeft:"1rem" }} />  :
 							null}
 					</div>
 				</div>
@@ -204,7 +222,7 @@ function App() {
 				<div>
 					{receivingCall && !callAccepted ? (
 						<div className="caller">
-							<h1 >{name} is calling...</h1>
+							<h1 >{name} is calling you!</h1>
 							<Button variant="contained" color="primary" onClick={answerCall}>
 								Answer
 						</Button>

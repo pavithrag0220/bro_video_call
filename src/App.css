@@ -4,7 +4,8 @@
 }
 
 .myId {
-	margin-right: 5rem;
+	margin-right: 2rem;
+	margin-left: 2rem;
 	border-radius: 5px;
 	background: #f8f8f8; /* fallback for old browsers */
 	/* background: -webkit-linear-gradient(to right, #e2e2e2, #c9d6ff); 
@@ -28,11 +29,21 @@
 
 .video-container {
 	display: grid;
+	border-radius: 30px;
 	grid-template-columns: 1fr 1fr;
 	justify-content: center;
 	align-content: center;
-	margin-top: 8rem;
-	margin-left: 5rem;
+	margin-top: 3rem;
+	margin-left: 3rem;
+
+}
+
+.video-bg {
+	background-color: azure;
+	border-radius: 30px;
+	margin-left: 0.5rem;
+	align-content: center;
+
 }
 
 .caller {
@@ -48,12 +59,4 @@ body {
 		#8e54e9,
 		#4776e6
 	); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-}
-
-.screen {
-	background-color: rgb(226, 226, 226) !important;
-	width: 40%;
-	margin: 1rem 0 1rem  !important;
-	color: black;
-	font-weight: 600;
 }

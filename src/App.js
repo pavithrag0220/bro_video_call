@@ -95,6 +95,7 @@ function App() {
 		})
 		console.log('mutted')
 		playVideo(newStream)
+		alert("Call Mutted")
 	  }
 	const playVideo=(stream)=>{
 	myVideo.current.srcObject =  new MediaStream(stream);
@@ -168,7 +169,7 @@ function App() {
 	return (
 		<div>
 			<Mrbrologo  style={imageStyle} > </Mrbrologo> 
-			<h1 style={{ textAlign: "center", color: '#fff' }}>GoodDayClass 1:1 Practice for Mr.Bro</h1>
+			<h1 style={{ textAlign: "center", color: "rgba(255, 98, 132, 1)" }}>GoodDayClass 1:1 Practice for Mr.Bro</h1>
 			<div className="container fluid">
 				<div className="video-container">
 					<div className="video video-bg">
@@ -193,8 +194,8 @@ function App() {
 						onChange={(e) => setName(e.target.value)}
 						style={{ marginBottom: "20px" }}
 					/>
-					<CopyToClipboard text={me} style={{ marginBottom: "2rem" }}>
-						<Button variant="contained" color="primary" startIcon={<AssignmentIcon fontSize="large" />}>
+					<CopyToClipboard text={me} style={{ marginBottom: "1rem" }}>
+						<Button variant="contained" color="secondary" startIcon={<AssignmentIcon fontSize="large" />}>
 							Copy Meeting ID
 					</Button>
 					</CopyToClipboard>
@@ -222,7 +223,7 @@ function App() {
 				<div>
 					{receivingCall && !callAccepted ? (
 						<div className="caller">
-							<h1 >{name} is calling you!</h1>
+							<h1>{name} is calling you!</h1>
 							<Button variant="contained" color="primary" onClick={answerCall}>
 								Answer
 						</Button>

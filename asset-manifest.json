@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/bro_video_call/static/css/main.a8263bf5.chunk.css",
+    "main.js": "/bro_video_call/static/js/main.a056043a.chunk.js",
+    "main.js.map": "/bro_video_call/static/js/main.a056043a.chunk.js.map",
+    "runtime-main.js": "/bro_video_call/static/js/runtime-main.8a2bb5df.js",
+    "runtime-main.js.map": "/bro_video_call/static/js/runtime-main.8a2bb5df.js.map",
+    "static/js/2.0364a4d0.chunk.js": "/bro_video_call/static/js/2.0364a4d0.chunk.js",
+    "static/js/2.0364a4d0.chunk.js.map": "/bro_video_call/static/js/2.0364a4d0.chunk.js.map",
+    "static/js/3.58258c1c.chunk.js": "/bro_video_call/static/js/3.58258c1c.chunk.js",
+    "static/js/3.58258c1c.chunk.js.map": "/bro_video_call/static/js/3.58258c1c.chunk.js.map",
+    "index.html": "/bro_video_call/index.html",
+    "static/css/main.a8263bf5.chunk.css.map": "/bro_video_call/static/css/main.a8263bf5.chunk.css.map",
+    "static/js/2.0364a4d0.chunk.js.LICENSE.txt": "/bro_video_call/static/js/2.0364a4d0.chunk.js.LICENSE.txt",
+    "static/media/mrbro.d0e4eebe.svg": "/bro_video_call/static/media/mrbro.d0e4eebe.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.8a2bb5df.js",
+    "static/js/2.0364a4d0.chunk.js",
+    "static/css/main.a8263bf5.chunk.css",
+    "static/js/main.a056043a.chunk.js"
+  ]
+}
